@@ -2,6 +2,6 @@ package controller;
 
 public interface ServerView {
     void showMessage(String message);
-    void connectUser();
-    void disconnect();
+    void disconnectUser(ClientController clientController);
+    boolean connectUser(ClientController clientController);
 }

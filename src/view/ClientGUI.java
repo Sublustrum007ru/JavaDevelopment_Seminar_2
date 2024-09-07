@@ -61,6 +61,11 @@ public class ClientGUI extends JFrame implements ClientView {
         headerPanel.setVisible(true);
     }
 
+    @Override
+    public ClientGUI getClientGUI(){
+        return this;
+    }
+
     public void login() {
         if(clientController.connectToServer(fieldLogin.getText())){
             headerPanel.setVisible(false);
@@ -89,8 +94,6 @@ public class ClientGUI extends JFrame implements ClientView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 login();
-                btnLogin.setVisible(false);
-                btnDisconect.setVisible(true);
             }
         });
         btnDisconect.addActionListener(new ActionListener() {

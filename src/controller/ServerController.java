@@ -6,58 +6,62 @@ import view.ServerGUI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerController {
-    List<ClientController> clientList;
-    private ClientController clientController;
+public class ServerController implements ServerView{
     private ServerGUI serverGUI;
-    private boolean serverSatatus;
-
-    public ServerController() {
-        clientList = new ArrayList<>();
-    }
+    private ClientController clientController = new ClientController();
+    private boolean serverStatus = false;
+    List<ClientGUI> clientList;
 
     public void setServerGUI(ServerGUI serverGUI) {
         this.serverGUI = serverGUI;
     }
 
+    public boolean getServerStatus(){
+        return serverStatus;
+    }
+
+    public void setServerStatus(boolean newStatus){
+        if(!serverStatus && newStatus){
+            serverStatus = newStatus;
+            serverGUI.showMessage("Server started");
+        }else if(serverStatus && newStatus){
+            serverGUI.showMessage("Server is alraedy start");
+        }else if(getServerStatus() && !newStatus){
+            serverStatus = newStatus;
+            serverGUI.showMessage("Server stopped");
+        }else{
+            serverGUI.showMessage("Server is already stopped");
+        }
+    }
+
+    public String getHistory(){
+        return "";
+    }
+
+    public void message(String message){
+        showMessage(message);
+    }
+
+    @Override
+    public void disconnectUser(ClientController clientController){
+        serverGUI.showMessage("Disconnect" + clientController.getClientGUI());
+    }
+
+    @Override
     public boolean connectUser(ClientController clientController) {
-        if (!getServerStatus()) {
+        clientList = new ArrayList<>();
+        if(!getServerStatus()){
             return false;
         }
-        clientList.add(clientController);
+        clientList.add(clientController.getClientGUI());
         return true;
     }
 
-    public String getHistory() {
-        String result = "";
-        return result;
-    }
-
-    public void disconnetUser(ClientController clientController) {
-        serverGUI.showMessage("Disconnect " + clientController);
-
-    }
-
-    public void message(String message) {
+    @Override
+    public void showMessage(String message) {
         serverGUI.showMessage(message);
+        clientController.answerFromServer(message);
     }
 
-    public void setServerStatus(boolean newStatus) {
-        if (!getServerStatus() && newStatus) {
-            serverSatatus = newStatus;
-            serverGUI.showMessage("The server has started");
-        } else if (getServerStatus() && newStatus) {
-            serverGUI.showMessage("The server is already running");
-        } else if (getServerStatus() && !newStatus) {
-            serverGUI.showMessage("The server has stopped");
-            serverSatatus = newStatus;
-            disconnetUser(clientController);
-        } else {
-            serverGUI.showMessage("The server has already been stopped");
-        }
-    }
 
-    private boolean getServerStatus() {
-        return serverSatatus;
-    }
 }

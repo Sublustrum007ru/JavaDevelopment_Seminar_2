@@ -1,5 +1,7 @@
 package controller;
 
+import view.ClientGUI;
+
 /**
  * Класс содержащий логику работы клиента
  *
@@ -10,14 +12,14 @@ public class ClientController {
     private boolean connected;
     private String userName;
     private ClientView clientView;
-    private ServerController serverController;
+    private ServerController server;
 
     public void setClientView(ClientView clientView) {
         this.clientView = clientView;
     }
 
-    public void setServerController(ServerController serverController) {
-        this.serverController = serverController;
+    public void setServer(ServerController server) {
+        this.server = server;
 
     }
 
@@ -29,10 +31,10 @@ public class ClientController {
      */
     public boolean connectToServer(String userName) {
         this.userName = userName;
-        if (serverController.connectUser(this)) {
+        if (server.connectUser(this)) {
             showOnWindow("Вы успешно подключены!\n");
             connected = true;
-            String log = serverController.getHistory();
+            String log = server.getHistory();
             if (log != null) {
                 showOnWindow(log);
             }
@@ -59,7 +61,7 @@ public class ClientController {
      * Метод отключения от сервера инициализированное клиентом(например закрытие окна)
      */
     public void disconnectFromServer() {
-        serverController.disconnetUser(this);
+        server.disconnectUser(this);
     }
 
     /**
@@ -79,7 +81,7 @@ public class ClientController {
     public void message(String text) {
         if (connected) {
             if (!text.isEmpty()) {
-                serverController.message(userName + ": " + text);
+                server.message(userName + ": " + text);
             }
         } else {
             showOnWindow("Нет подключения к серверу");
@@ -94,4 +96,9 @@ public class ClientController {
     private void showOnWindow(String text) {
         clientView.showMessage(text);
     }
+
+    public ClientGUI getClientGUI(){
+        return clientView.getClientGUI();
+    }
+
 }
