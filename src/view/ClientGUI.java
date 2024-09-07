@@ -10,20 +10,13 @@ import java.awt.event.*;
 public class ClientGUI extends JFrame implements ClientView {
     private static final int WIDTH = 400;
     private static final int HEIGHT = 300;
-    private static final String TITLE = "Chat client";
-    private static final String FIELD_IP = "17.0.0.1";
-    private static final String FIELD_PORT = "8189";
-    private static final String FIELD_LOGIN = "Sublustrum007";
-    private static final String FIELD_PASSWORD = "123456";
-    private static final String BUTTON_LOGIN = "Login";
-    private static final String BUTTON_DISCONECT = "Disconect";
-    private static final String BUTTON_SEND = "Send";
+
 
     private JTextArea log;
     private JTextField fieldIP, fieldPort, fieldLogin, fieldMessage;
     private JPasswordField fieldPassword;
     private JButton btnLogin, btnDisconect, btnSend;
-    private JPanel headerPanel, footerPanel;
+    private JPanel headerPanel;
 
     private ClientController clientController;
 
@@ -37,7 +30,7 @@ public class ClientGUI extends JFrame implements ClientView {
     private void setting() {
         setSize(WIDTH, HEIGHT);
         setResizable(false);
-        setTitle(TITLE);
+        setTitle("Chat client");
         setDefaultCloseOperation(HIDE_ON_CLOSE);
     }
 
@@ -61,10 +54,6 @@ public class ClientGUI extends JFrame implements ClientView {
         headerPanel.setVisible(true);
     }
 
-    @Override
-    public ClientGUI getClientGUI(){
-        return this;
-    }
 
     public void login() {
         if(clientController.connectToServer(fieldLogin.getText())){
@@ -73,8 +62,8 @@ public class ClientGUI extends JFrame implements ClientView {
 
     }
 
-    public static void disconnetFromServer() {
-        disconnetFromServer();
+    public void disconnetFromServer() {
+        headerPanel.setVisible(true);
     }
 
     private void message() {
@@ -84,12 +73,12 @@ public class ClientGUI extends JFrame implements ClientView {
 
     private Component createHederPanel() {
         headerPanel = new JPanel(new GridLayout(2, 3));
-        fieldIP = new JTextField(FIELD_IP);
-        fieldPort = new JTextField(FIELD_PORT);
-        fieldLogin = new JTextField(FIELD_LOGIN);
-        fieldPassword = new JPasswordField(FIELD_PASSWORD);
-        btnLogin = new JButton(BUTTON_LOGIN);
-        btnDisconect = new JButton(BUTTON_DISCONECT);
+        fieldIP = new JTextField("127.0.0.1");
+        fieldPort = new JTextField("3984");
+        fieldLogin = new JTextField("Sublustrum007");
+        fieldPassword = new JPasswordField("12345678");
+        btnLogin = new JButton("Connect");
+        btnDisconect = new JButton("Disconnect");
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -130,7 +119,7 @@ public class ClientGUI extends JFrame implements ClientView {
                 }
             }
         });
-        btnSend = new JButton(BUTTON_SEND);
+        btnSend = new JButton("Send");
         btnSend.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

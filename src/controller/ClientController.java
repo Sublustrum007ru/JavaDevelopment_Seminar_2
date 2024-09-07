@@ -1,6 +1,5 @@
 package controller;
 
-import view.ClientGUI;
 
 /**
  * Класс содержащий логику работы клиента
@@ -53,7 +52,6 @@ public class ClientController {
             connected = false;
             clientView.disconnectedFromServer();
             showOnWindow("Вы были отключены от сервера!");
-            clientView.disconnectedFromServer();
         }
     }
 
@@ -96,9 +94,4 @@ public class ClientController {
     private void showOnWindow(String text) {
         clientView.showMessage(text);
     }
-
-    public ClientGUI getClientGUI(){
-        return clientView.getClientGUI();
-    }
-
 }
