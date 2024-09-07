@@ -16,37 +16,38 @@ public class ClientGUI extends JFrame implements ClientView {
     private static final String FIELD_LOGIN = "Sublustrum007";
     private static final String FIELD_PASSWORD = "123456";
     private static final String BUTTON_LOGIN = "Login";
+    private static final String BUTTON_DISCONECT = "Disconect";
     private static final String BUTTON_SEND = "Send";
 
     private JTextArea log;
     private JTextField fieldIP, fieldPort, fieldLogin, fieldMessage;
     private JPasswordField fieldPassword;
-    private JButton btnLogin, btnSend;
+    private JButton btnLogin, btnDisconect, btnSend;
     private JPanel headerPanel, footerPanel;
 
     private ClientController clientController;
 
-    public ClientGUI(){
+    public ClientGUI() {
         setting();
         createPanel();
 
         setVisible(true);
     }
 
-    private void setting(){
+    private void setting() {
         setSize(WIDTH, HEIGHT);
         setResizable(false);
         setTitle(TITLE);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
     }
 
-    private void createPanel(){
+    private void createPanel() {
         add(createHederPanel(), BorderLayout.NORTH);
         add(createLog());
         add(createFooter(), BorderLayout.SOUTH);
     }
 
-    public void setClient(ClientController clientController){
+    public void setClient(ClientController clientController) {
         this.clientController = clientController;
     }
 
@@ -60,30 +61,43 @@ public class ClientGUI extends JFrame implements ClientView {
         headerPanel.setVisible(true);
     }
 
-    public void login(){
-        if(clientController.connectToServer(fieldLogin.getText()));
-        headerPanel.setVisible(false);
+    public void login() {
+        if(clientController.connectToServer(fieldLogin.getText())){
+            headerPanel.setVisible(false);
+        }
+
     }
 
-    public static void disconnetFromServer(){
+    public static void disconnetFromServer() {
         disconnetFromServer();
     }
 
-    private void message(){
+    private void message() {
         clientController.message(fieldMessage.getText());
         fieldMessage.setText(null);
     }
-    private Component createHederPanel(){
-        headerPanel = new JPanel(new GridLayout(2,3));
+
+    private Component createHederPanel() {
+        headerPanel = new JPanel(new GridLayout(2, 3));
         fieldIP = new JTextField(FIELD_IP);
         fieldPort = new JTextField(FIELD_PORT);
         fieldLogin = new JTextField(FIELD_LOGIN);
         fieldPassword = new JPasswordField(FIELD_PASSWORD);
         btnLogin = new JButton(BUTTON_LOGIN);
+        btnDisconect = new JButton(BUTTON_DISCONECT);
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 login();
+                btnLogin.setVisible(false);
+                btnDisconect.setVisible(true);
+            }
+        });
+        btnDisconect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                disconnectedFromServer();
+                clientController.disconnectFromServer();
             }
         });
         headerPanel.add(fieldIP);
@@ -96,19 +110,19 @@ public class ClientGUI extends JFrame implements ClientView {
         return headerPanel;
     }
 
-    private Component createLog(){
+    private Component createLog() {
         log = new JTextArea();
         log.setEditable(false);
         return new JScrollPane(log);
     }
 
-    private Component createFooter(){
+    private Component createFooter() {
         JPanel panel = new JPanel(new BorderLayout());
         fieldMessage = new JTextField();
         fieldMessage.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
-                if(e.getKeyChar() == '\n'){
+                if (e.getKeyChar() == '\n') {
                     message();
                 }
             }
@@ -126,9 +140,9 @@ public class ClientGUI extends JFrame implements ClientView {
     }
 
     @Override
-    protected void processWindowEvent(WindowEvent e){
+    protected void processWindowEvent(WindowEvent e) {
         super.processWindowEvent(e);
-        if(e.getID() == WindowEvent.WINDOW_CLOSING){
+        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
             this.disconnectedFromServer();
         }
     }

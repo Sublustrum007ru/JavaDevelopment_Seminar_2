@@ -10,31 +10,34 @@ public class ClientController {
     private boolean connected;
     private String userName;
     private ClientView clientView;
-    private ServerController server;
+    private ServerController serverController;
 
-    public void setClientView(ClientView clientView){
+    public void setClientView(ClientView clientView) {
         this.clientView = clientView;
     }
-    public void setServer(ServerController server){
-        this.server = server;
+
+    public void setServerController(ServerController serverController) {
+        this.serverController = serverController;
+
     }
 
     /**
      * Метод попытки подключения к серверую. Вызывается из GUI
+     *
      * @param userName - имя пользователя, котоум будем подписываться исходящее сообщение
      * @return - ответ от ссервера. "true" - если прошли авторизацию.
      */
-    public boolean connectToServer(String userName){
+    public boolean connectToServer(String userName) {
         this.userName = userName;
-        if(server.connectUser(this)){
+        if (serverController.connectUser(this)) {
             showOnWindow("Вы успешно подключены!\n");
             connected = true;
-            String log = server.getHistory();
-            if(log != null){
+            String log = serverController.getHistory();
+            if (log != null) {
                 showOnWindow(log);
             }
             return true;
-        }else{
+        } else {
             showOnWindow("Подключение не удалось");
             return false;
         }
@@ -43,48 +46,52 @@ public class ClientController {
     /**
      * Метод отключения от сервера инициализированное клиентом
      */
-    public void disconnetedFromServer(){
-        if(connected){
+    public void disconnetedFromServer() {
+        if (connected) {
             connected = false;
             clientView.disconnectedFromServer();
             showOnWindow("Вы были отключены от сервера!");
+            clientView.disconnectedFromServer();
         }
     }
 
     /**
      * Метод отключения от сервера инициализированное клиентом(например закрытие окна)
      */
-    public void disconnectFromServer(){
-        server.disconnetUser(this);
+    public void disconnectFromServer() {
+        serverController.disconnetUser(this);
     }
 
     /**
      * Метод, с помощью которого сервер передает клиенту сообщения
+     *
      * @param text - текст переданный от сервера
      */
-    public void answerFromServer(String text){
+    public void answerFromServer(String text) {
         showOnWindow(text);
     }
 
     /**
      * Метод для передачи сообщения на сервер
+     *
      * @param text - текст передаваемого сообщения
      */
-    public void message(String text){
-        if(connected){
-            if(!text.isEmpty()){
-                server.message(userName + ": " + text);
+    public void message(String text) {
+        if (connected) {
+            if (!text.isEmpty()) {
+                serverController.message(userName + ": " + text);
             }
-        }else{
+        } else {
             showOnWindow("Нет подключения к серверу");
         }
     }
 
     /**
      * Метод вывода сообщения на GUI
+     *
      * @param text - текс, который требуется вывести на экран
      */
-    private void showOnWindow(String text){
+    private void showOnWindow(String text) {
         clientView.showMessage(text);
     }
 }
