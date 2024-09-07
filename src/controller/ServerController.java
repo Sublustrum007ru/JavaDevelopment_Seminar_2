@@ -39,7 +39,14 @@ public class ServerController extends FileOperation implements ServerView {
     }
 
     public String getHistory() {
-        return "";
+        String result = "";
+        List<String> history = file.readFile(path_log);
+        for(String line : history){
+            if(line != null){
+                result += line + "\n";
+            }
+        }
+        return result;
     }
 
     public void message(String message) {
